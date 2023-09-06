@@ -1,5 +1,16 @@
+import { Outlet } from 'react-router-dom';
+
+import Poster from './components/Poster/Poster';
+import Layout from './components/Layout/Layout';
+
 function App() {
-  return <div>APP</div>;
+  return (
+    <Layout>
+      <Poster />
+
+      <Outlet />
+    </Layout>
+  );
 }
 
 export default App;
