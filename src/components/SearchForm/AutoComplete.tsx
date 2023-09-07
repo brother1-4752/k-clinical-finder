@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { AxiosResponseTypes } from '../../types/AxiosResponseTypes';
 import { MouseEvent } from 'react';
 import NotSearched from './NotSearched';
+import applyBoldFont from '../Atoms/BoldFont';
 
 type Props = {
   dataList: AxiosResponseTypes['data'];
@@ -17,9 +18,6 @@ const AutoComplete = ({ dataList, keyword, keyboardIndex }: Props) => {
   const onMouseOutHandler = (event: MouseEvent<HTMLLIElement>) => {
     event.currentTarget.style.backgroundColor = 'inherit';
   };
-
-  let id = 1;
-  const getId = () => id++;
 
   return (
     <StyledRecommendLayout>
@@ -43,15 +41,7 @@ const AutoComplete = ({ dataList, keyword, keyboardIndex }: Props) => {
             key={data.sickCd}
           >
             🔎
-            {data.sickNm.split('').map((chunk) =>
-              keyword.includes(chunk) ? (
-                <span key={getId()} className="keyword--bold">
-                  {chunk}
-                </span>
-              ) : (
-                chunk
-              )
-            )}
+            {applyBoldFont(keyword, data.sickNm)}
           </li>
         ))}
       </ul>
