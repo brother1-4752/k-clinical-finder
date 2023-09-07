@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 import { AxiosResponseTypes } from '../../types/AxiosResponseTypes';
-import { MouseEvent } from 'react';
 import NotSearched from './NotSearched';
-import applyBoldFont from '../Atoms/BoldFont';
+import AutoCompleteItem from './AutoCompleteItem';
 
 type Props = {
   dataList: AxiosResponseTypes['data'];
@@ -11,14 +10,6 @@ type Props = {
 };
 
 const AutoComplete = ({ dataList, keyword, keyboardIndex }: Props) => {
-  const onMouseOverHandler = (event: MouseEvent<HTMLLIElement>) => {
-    event.currentTarget.style.backgroundColor = '#e7e7e8';
-  };
-
-  const onMouseOutHandler = (event: MouseEvent<HTMLLIElement>) => {
-    event.currentTarget.style.backgroundColor = 'inherit';
-  };
-
   return (
     <StyledRecommendLayout>
       <div className="recommend__header">
@@ -32,17 +23,12 @@ const AutoComplete = ({ dataList, keyword, keyboardIndex }: Props) => {
       <ul className="recommend__list">
         {dataList.length === 0 && <NotSearched keyword={keyword} />}
         {dataList.map((data, index) => (
-          <li
-            onMouseOver={onMouseOverHandler}
-            onMouseOut={onMouseOutHandler}
-            className={`recommend__listitem ${
-              keyboardIndex === index ? 'keyOver' : ''
-            }`}
-            key={data.sickCd}
-          >
-            🔎
-            {applyBoldFont(keyword, data.sickNm)}
-          </li>
+          <AutoCompleteItem
+            keyboardIndex={keyboardIndex}
+            index={index}
+            keyword={keyword}
+            sickNm={data.sickNm}
+          />
         ))}
       </ul>
     </StyledRecommendLayout>
