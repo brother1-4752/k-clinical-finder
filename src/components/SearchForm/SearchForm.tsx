@@ -2,8 +2,9 @@ import styled from 'styled-components';
 import useInput from '../../hooks/useInput';
 import useDebounce from '../../hooks/useDebounce';
 import useAxiosFetchData from '../../hooks/useAxiosFetchData';
-import { KeyboardEvent, MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent } from 'react';
 import AutoComplete from './AutoComplete';
+import useKeydown from '../../hooks/useKeydown';
 
 const SearchForm = () => {
   const [
@@ -16,33 +17,13 @@ const SearchForm = () => {
   ] = useInput<string>('');
   const debounceValue = useDebounce(keyword);
   const dataList = useAxiosFetchData(debounceValue);
-  const [keyboardIndex, setKeyboardIndex] = useState(-1);
+  const { keyboardIndex, onKeyHandler } = useKeydown(dataList);
 
   const onClickDeleteButton = (event: MouseEvent<HTMLButtonElement>) => {
     //TODO: focus를 유지하기
     event.preventDefault();
     setKeyword('');
   };
-
-  const onKeyHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (!event.nativeEvent.isComposing) {
-      if (event.key === 'ArrowUp' && keyboardIndex > 0) {
-        setKeyboardIndex((prev) => prev - 1);
-      }
-
-      if (event.key === 'ArrowDown' && keyboardIndex < dataList.length - 1) {
-        setKeyboardIndex((prev) => prev + 1);
-      }
-    }
-  };
-
-  const callback = () => {
-    setKeyboardIndex(-1);
-  };
-
-  useEffect(() => {
-    callback();
-  }, [dataList]);
 
   return (
     <StyledForm>
