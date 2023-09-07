@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { AxiosResponseTypes } from '../../types/AxiosResponseTypes';
 import { MouseEvent } from 'react';
+import NotSearched from './NotSearched';
 
 type Props = {
   dataList: AxiosResponseTypes['data'];
@@ -9,14 +10,6 @@ type Props = {
 };
 
 const AutoComplete = ({ dataList, keyword, keyboardIndex }: Props) => {
-  const NotSearched = () => {
-    if (keyword.length === 0 || keyword.trim().length === 0) {
-      return <li>키워드가 비었습니다</li>;
-    } else {
-      return <li>검색 결과, 관련 키워드가 없습니다.</li>;
-    }
-  };
-
   const onMouseOverHandler = (event: MouseEvent<HTMLLIElement>) => {
     event.currentTarget.style.backgroundColor = '#e7e7e8';
   };
@@ -39,7 +32,7 @@ const AutoComplete = ({ dataList, keyword, keyboardIndex }: Props) => {
       </div>
 
       <ul className="recommend__list">
-        {dataList.length === 0 && <NotSearched />}
+        {dataList.length === 0 && <NotSearched keyword={keyword} />}
         {dataList.map((data, index) => (
           <li
             onMouseOver={onMouseOverHandler}
