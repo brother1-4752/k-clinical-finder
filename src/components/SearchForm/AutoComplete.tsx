@@ -71,7 +71,7 @@ const StyledRecommendLayout = styled.div`
       cursor: pointer;
     }
     .keyOver {
-      background-color: #e7e7e8;
+      background-color: #e7e7e8 !important;
     }
   }
 
