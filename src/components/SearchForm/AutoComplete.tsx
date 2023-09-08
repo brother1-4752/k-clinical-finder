@@ -22,12 +22,13 @@ const AutoComplete = ({ dataList, keyword, keyboardIndex }: Props) => {
 
       <ul className="recommend__list">
         {dataList.length === 0 && <NotSearched keyword={keyword} />}
-        {dataList.map((data, index) => (
+        {dataList?.map((data, index) => (
           <AutoCompleteItem
             keyboardIndex={keyboardIndex}
             index={index}
             keyword={keyword}
             sickNm={data.sickNm}
+            key={index}
           />
         ))}
       </ul>
@@ -44,7 +45,6 @@ const StyledRecommendLayout = styled.div`
   padding: 20px;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px,
     rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   border-radius: 15px;
@@ -66,6 +66,7 @@ const StyledRecommendLayout = styled.div`
   }
 
   .recommend__list {
+    overflow-y: scroll;
     .recommend__listitem {
       padding: 10px 0 10px 5px;
       cursor: pointer;
