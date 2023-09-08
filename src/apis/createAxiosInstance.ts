@@ -1,16 +1,19 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { API_BASE_URL } from '../constants/apiUrl';
+import { setCacheStorage } from '../utils/cacheStorage';
 
-const axiosConfig: AxiosRequestConfig = {
+const axiosConfig = {
   baseURL: API_BASE_URL,
   timeout: 3000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 };
 
 const instance = axios.create(axiosConfig);
 
 instance.interceptors.request.use(
-  (config) => {
-    console.info('calling api : ', getId());
+  async (config) => {
     return config;
   },
   (error) => {
@@ -19,15 +22,16 @@ instance.interceptors.request.use(
 );
 
 instance.interceptors.response.use(
-  (response) => {
+  async (response) => {
+    await setCacheStorage(response);
     return response;
   },
-  (error) => {
+  async (error) => {
+    if (error instanceof AxiosError) {
+      console.error(error.message);
+    }
     return Promise.reject(error.response);
   }
 );
 
 export default instance;
-
-let id = 1;
-const getId = () => id++;

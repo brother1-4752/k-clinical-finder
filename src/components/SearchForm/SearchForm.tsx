@@ -53,8 +53,6 @@ const SearchForm = () => {
           dataList={dataList}
         />
       )}
-
-      {/* ul + li 검색에 따른 비동기 호출 */}
     </StyledForm>
   );
 };
