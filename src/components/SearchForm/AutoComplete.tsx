@@ -11,6 +11,27 @@ type Props = {
   keyboardIndex: number;
 };
 
+const RecentKeywords = () => {
+  const hasSessionData = sessionStorage.getItem('recent_keywords');
+  const data: string[] = JSON.parse(hasSessionData as string);
+
+  return (
+    data && (
+      <>
+        <h1>최근 검색어 :</h1>
+        <div className="keywords_container">
+          {data.map((el, index) => (
+            <span className="keyword--bold keyword" key={index}>
+              {el}
+            </span>
+          ))}
+        </div>
+        <hr style={{ width: '100%' }} />
+      </>
+    )
+  );
+};
+
 const AutoComplete = ({ dataList, keyword, keyboardIndex }: Props) => {
   return (
     <StyledRecommendLayout>
@@ -19,10 +40,12 @@ const AutoComplete = ({ dataList, keyword, keyboardIndex }: Props) => {
           현재 검색어 : <span className="keyword--bold">{keyword}</span>
         </h1>
         <hr style={{ width: '100%' }} />
-        <h3 className="recommend_title">추천 검색어</h3>
+
+        <RecentKeywords />
       </div>
 
       <ul className="recommend__list">
+        <h3 className="recommend_title">추천 검색어 : </h3>
         {dataList.length === 0 && <NotSearched keyword={keyword} />}
         {dataList?.map((data, index) => (
           <CustomSuspense
@@ -66,7 +89,6 @@ const StyledRecommendLayout = styled.div`
 
   .recommend__header {
     width: 100%;
-    height: 80px;
     display: flex;
     flex-direction: column;
     background-color: white;
@@ -75,6 +97,18 @@ const StyledRecommendLayout = styled.div`
       margin: 10px 0;
       opacity: 0.6;
       font-size: 12px;
+    }
+  }
+
+  .keywords_container {
+    display: flex;
+
+    .keyword {
+      padding: 5px;
+      margin: 10px 10px 10px 0;
+      border-radius: 5px;
+      background-color: #31679e;
+      cursor: pointer;
     }
   }
 

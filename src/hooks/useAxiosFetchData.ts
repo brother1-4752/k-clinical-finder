@@ -7,6 +7,8 @@ import { CACHE_KEY } from '../constants/cache';
 import { isExpired } from '../utils/isExpired';
 import { URL_SICK } from '../constants/apiUrl';
 
+let recent_keywords: string[] = [];
+
 const fetchData = async (word: string) => {
   //최초 API 호출 방지
   if (word === '' || word.trim() === '') return [];
@@ -25,8 +27,26 @@ const fetchData = async (word: string) => {
       if (isExpired(cachedData.expireTime)) {
         const cacheStorage = await caches.open(CACHE_KEY);
         const cacheUrl = new URLSearchParams(config.params).toString();
+
+        recent_keywords = recent_keywords.filter(
+          (el) => el !== config.params.sickNm_like
+        );
+
+        sessionStorage.setItem(
+          'recent_keywords',
+          JSON.stringify(recent_keywords)
+        );
+
         cacheStorage.delete(cacheUrl);
       } else {
+        if (recent_keywords.indexOf(config.params.sickNm_like) === -1) {
+          recent_keywords.push(config.params.sickNm_like);
+          sessionStorage.setItem(
+            'recent_keywords',
+            JSON.stringify(recent_keywords)
+          );
+        }
+
         return cachedData.data;
       }
     }
@@ -34,6 +54,13 @@ const fetchData = async (word: string) => {
     //처음 검색하는 키워드일 경우, api 호출
     const response = await instance.get(`${URL_SICK}`, config);
     console.info('calling api : ', getId());
+    if (recent_keywords.indexOf(config.params.sickNm_like) === -1) {
+      recent_keywords.push(config.params.sickNm_like);
+      sessionStorage.setItem(
+        'recent_keywords',
+        JSON.stringify(recent_keywords)
+      );
+    }
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
