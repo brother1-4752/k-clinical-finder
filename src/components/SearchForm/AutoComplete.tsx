@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import { AxiosResponseTypes } from '../../types/AxiosResponseTypes';
 import NotSearched from './NotSearched';
 import AutoCompleteItem from './AutoCompleteItem';
+import CustomSuspense from '../Suspense/CustomSuspense';
+import { MoonLoader } from 'react-spinners';
 
 type Props = {
   dataList: AxiosResponseTypes['data'];
@@ -23,13 +25,24 @@ const AutoComplete = ({ dataList, keyword, keyboardIndex }: Props) => {
       <ul className="recommend__list">
         {dataList.length === 0 && <NotSearched keyword={keyword} />}
         {dataList?.map((data, index) => (
-          <AutoCompleteItem
-            keyboardIndex={keyboardIndex}
-            index={index}
-            keyword={keyword}
-            sickNm={data.sickNm}
+          <CustomSuspense
+            fallback={
+              index === 0 ? (
+                <div className="loading__container">
+                  <MoonLoader color="#31679E" speedMultiplier={0.8} />
+                </div>
+              ) : null
+            }
+            maxDuration={1000}
             key={index}
-          />
+          >
+            <AutoCompleteItem
+              keyboardIndex={keyboardIndex}
+              index={index}
+              keyword={keyword}
+              sickNm={data.sickNm}
+            />
+          </CustomSuspense>
         ))}
       </ul>
     </StyledRecommendLayout>
@@ -71,6 +84,15 @@ const StyledRecommendLayout = styled.div`
       padding: 10px 0 10px 5px;
       cursor: pointer;
     }
+
+    .loading__container {
+      width: 100%;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     .keyOver {
       background-color: #e7e7e8 !important;
     }
